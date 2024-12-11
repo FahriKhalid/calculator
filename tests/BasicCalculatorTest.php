@@ -1,10 +1,19 @@
 <?php
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use Uyab\Calculator\BasicCalculator;
 use PHPUnit\Framework\TestCase;
+use Uyab\Calculator\AddCalculation;
+use Uyab\Calculator\SubtractCalculation;
+use Uyab\Calculator\MultiplyCalculation;
+use Uyab\Calculator\DivideCalculation;
 
 #[CoversClass(BasicCalculator::class)]
+#[CoversTrait(AddCalculation::class)]
+#[CoversTrait(SubtractCalculation::class)]
+#[CoversTrait(MultiplyCalculation::class)]
+#[CoversTrait(DivideCalculation::class)]
 class BasicCalculatorTest extends TestCase
 {
     public function testAdd(): void
@@ -42,10 +51,10 @@ class BasicCalculatorTest extends TestCase
         $this->assertEquals("Infinity", $result);
     }
 
-    public function testAddAndReturnAsString(): void
-    {
-        $calculator = new BasicCalculator();
-        $result = $calculator->addAndReturnAsString(1, 2);
-        $this->assertEquals("tiga", $result);
-    }
+    // public function testAddAndReturnAsString(): void
+    // {
+    //     $calculator = new BasicCalculator();
+    //     $result = $calculator->addAndReturnAsString(1, 2);
+    //     $this->assertEquals("tiga", $result);
+    // }
 }

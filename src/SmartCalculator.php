@@ -2,29 +2,54 @@
 
 namespace Uyab\Calculator;
 
-class SmartCalculator extends BasicCalculator
+use InvalidArgumentException;
+
+class SmartCalculator
 {
-    public function calculate(string $expression): int|string
+    private OperationFactory $operationFactory;
+
+    public function __construct(OperationFactory $operationFactory = null)
     {
-        $parts = preg_split('#([+\-*/])#', $expression, -1, PREG_SPLIT_DELIM_CAPTURE);
-        $number1 = (int)$parts[0];
-        $number2 = (int)$parts[2];
-
-        if ($parts[1] === '+') {
-            $result = $this->add($number1, $number2);
-        } elseif ($parts[1] === '-') {
-            $result = $this->subtract($number1, $number2);
-        } elseif ($parts[1] === '*') {
-            $result = $this->multiply($number1, $number2);
-        } elseif ($parts[1] === '/') {
-            $result = $this->divide($number1, $number2);
-        }
-
-        return $result;
+        $this->operationFactory = $operationFactory ?: new OperationFactory();
     }
 
-    public function calculateAndDisplayAsTerbilang($expression): string
+    public function calculate(string $expression): int|string
     {
-        return (new Terbilang($this->calculate($expression)))->toString();
+        $parts = $this->parseExpression($expression);
+
+        if (count($parts) !== 3) {
+            throw new InvalidArgumentException("Invalid expression format");
+        }
+
+        [$firstNumber, $operator, $secondNumber] = $parts;
+
+        $operation = $this->operationFactory->getOperation($operator);
+
+        return $this->performCalculation(
+            $operation,
+            $this->convertToNumber($firstNumber),
+            $this->convertToNumber($secondNumber)
+        );
+    }
+
+    public function calculateAndDisplayAsTerbilang(string $expression): string
+    {
+        $result = $this->calculate($expression);
+        return (new Terbilang($result))->toString();
+    }
+
+    private function parseExpression(string $expression): array
+    {
+        return preg_split('#([+\-*/])#', $expression, -1, PREG_SPLIT_DELIM_CAPTURE);
+    }
+
+    private function convertToNumber(string $value): int
+    {
+        return (int)trim($value);
+    }
+
+    private function performCalculation(OperationInterface $operator, int $firstNumber,  int $secondNumber): int|string
+    {
+        return $operator->calculate($firstNumber, $secondNumber);
     }
 }

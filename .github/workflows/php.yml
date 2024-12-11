@@ -1,0 +1,50 @@
+name: PHP Composer
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: ramageek/image:php8.3-laravel-dev
+      options: --workdir /var/www/html
+
+    steps:
+      - name: Clone Repository
+        run: cd /var/www && rm -rf html && git clone https://github.com/ramaID/calculator.git html && cd html && ls
+
+      - name: Verify Clone
+        run: |
+          if [ -d "/var/www/html" ]; then
+            echo "Repository cloned successfully"
+            cd /var/www/html && ls -la
+          else
+            echo "Clone failed"
+            exit 1
+          fi
+        working-directory: /var/www/html
+
+      - name: Show Status
+        run: |
+          pwd
+          git status
+          composer install --prefer-dist --no-progress
+        working-directory: /var/www/html
+
+      # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
+      # Docs: https://getcomposer.org/doc/articles/scripts.md
+
+      - name: Run test suite
+        run: |
+          XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover coverage.xml
+          cp sonar-project.properties.example sonar-project.properties
+          sonar-scanner -Dsonar.login=${{ secrets.SONAR_LOGIN }} -Dsonar.host.url=${{ secrets.SONAR_HOST }}
+        working-directory: /var/www/html
