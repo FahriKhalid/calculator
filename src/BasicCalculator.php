@@ -2,10 +2,8 @@
 
 namespace Uyab\Calculator;
 
-
 class BasicCalculator
 {
-
     public function add($a, $b)
     {
         return AddCalculation::calculate($a, $b);

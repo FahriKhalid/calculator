@@ -18,7 +18,7 @@ class SmartCalculator
         $parts = $this->parseExpression($expression);
 
         if (count($parts) !== 3) {
-            throw new InvalidArgumentException("Invalid expression format");
+            throw new InvalidArgumentException('Invalid expression format');
         }
 
         [$firstNumber, $operator, $secondNumber] = $parts;
@@ -35,6 +35,7 @@ class SmartCalculator
     public function calculateAndDisplayAsTerbilang(string $expression): string
     {
         $result = $this->calculate($expression);
+
         return (new Terbilang($result))->toString();
     }
 
@@ -45,10 +46,10 @@ class SmartCalculator
 
     private function convertToNumber(string $value): int
     {
-        return (int)trim($value);
+        return (int) trim($value);
     }
 
-    private function performCalculation(OperationInterface $operator, int $firstNumber,  int $secondNumber): int|string
+    private function performCalculation(OperationInterface $operator, int $firstNumber, int $secondNumber): int|string
     {
         return $operator->calculate($firstNumber, $secondNumber);
     }

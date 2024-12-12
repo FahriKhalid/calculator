@@ -3,13 +3,13 @@
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Uyab\Calculator\SmartCalculator;
-use Uyab\Calculator\Terbilang;
 use Uyab\Calculator\AddCalculation;
-use Uyab\Calculator\SubtractCalculation;
-use Uyab\Calculator\MultiplyCalculation;
 use Uyab\Calculator\DivideCalculation;
+use Uyab\Calculator\MultiplyCalculation;
 use Uyab\Calculator\OperationFactory;
+use Uyab\Calculator\SmartCalculator;
+use Uyab\Calculator\SubtractCalculation;
+use Uyab\Calculator\Terbilang;
 
 #[CoversClass(SmartCalculator::class)]
 #[CoversClass(Terbilang::class)]
@@ -37,16 +37,15 @@ class SmartCalculatorTest extends TestCase
     public function testCalculateWithInvalidExpressionFormatThrowsException(): void
     {
         // Expect InvalidArgumentException to be thrown
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         // Expect the message to be "Invalid expression format"
-        $this->expectExceptionMessage("Invalid expression format");
+        $this->expectExceptionMessage('Invalid expression format');
 
         // Instantiate the calculator
         $calculator = new SmartCalculator();
         // Pass an invalid expression format (e.g., unsupported operator)
-        $calculator->calculate("2 ^ 3");  // '^' is unsupported, so it should throw an exception
+        $calculator->calculate('2 ^ 3');  // '^' is unsupported, so it should throw an exception
     }
-
 
     public static function expressionProvider(): array
     {
@@ -55,7 +54,7 @@ class SmartCalculatorTest extends TestCase
             ['2 - 1', 1],         // Subtraction
             ['3 * 2', 6],         // Multiplication
             ['6 / 2', 3],         // Division
-            ['5 / 0', "Infinity"], // Division by zero
+            ['5 / 0', 'Infinity'], // Division by zero
         ];
     }
 

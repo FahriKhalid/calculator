@@ -20,9 +20,10 @@ class OperationFactory
 
     public function getOperation(string $operator): OperationInterface
     {
-        if (!isset($this->operations[$operator])) {
-            throw new InvalidArgumentException("Invalid expression format");
+        if (! isset($this->operations[$operator])) {
+            throw new InvalidArgumentException('Invalid expression format');
         }
+
         return $this->operations[$operator];
     }
 }
